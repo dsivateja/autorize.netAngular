@@ -1,0 +1,70 @@
+1.while developing the payment application one should ensure that payment card industry data security standards are followed. 
+2. transation  types used by the merchants
+
+1. card not present
+2. card present
+
+
+payment process for the credit card are divided into three process
+1. authoriztion
+2. capture
+3. settlement
+
+
+
+1. authoriztion: a request to charge an amount to the card.
+2. capture : flags the funds to transfer
+3. settlement: transfers the fund from the customers account to the merchants account.
+
+
+autorization/pending capture
+capture/ pending settlement 
+
+in authorization.net merchant can select the time when to settle all the transation at that time all the transation are settled and transfered.
+
+
+type of transations that merchant can able to perform 
+1. authorization & capture   --default for all the transations  
+
+	The transaction amount is sent for authorization and if it is approved, the transaction is automatically submitted for settlement. This transaction is the most common type of transaction and is the default when merchants manually enter transactions in the Merchant Interface.
+
+	To submit an Authorization and Capture request, set the transactionType element to authCaptureTransaction in the createTransactionRequest API call.
+
+2. authorization only
+	he transaction amount is sent for authorization only. The transaction is not settled until captured by Prior Authorization Capture (see definition below), or the merchant manually captures the transaction in the Merchant Interface. Authorization Only transactions that are not captured within 30 days of authorization are expired and are no longer available for settlement. Merchants with an expired transaction should authorize and capture a new transaction to receive funds.
+
+	To submit an Authorization Only request, set the transactionType element to authOnlyTransaction in the createTransactionRequest API call.
+
+3. prior authorization and capture.
+	The previously authorized transaction is captured and queued for settlement. Authorize.net accepts this transaction type if:
+
+	The original Authorization Only transaction was submitted within the past 30 days and has not expired.
+	The Authorization Only transaction was successful and is not yet captured.
+	The amount being requested for capture is less than or equal to the original authorized amount. Only one Prior Authorization Capture request can be submitted against an Authorization Only transaction.
+	The Prior Authorization Capture request is submitted with the valid transaction ID of an Authorization Only transaction.
+	To submit a Prior Authorization Capture request, set the transactionType element to priorAuthCaptureTransaction in the createTransactionRequest API call.
+
+	In addition, specify the transaction ID of the original Authorize Only transaction in the refTransId element.
+
+	For the Prior Authorization Capture transaction type, the amount element is required only if capturing less than the amount of the original Authorization Only transaction. If no amount is submitted, Authorize.net settles the transaction for the original authorization amount.
+	
+
+4. credit (refund)
+	The transaction specified in the refTransId element is refunded after settlement. A credit is a new and distinct transaction from the original charge with its own unique transaction ID. Merchants can submit credits against settled transactions in amounts up to the original capture amount. By default, the merchant can refund a settled transaction within 180 days of settlement.
+
+	Important: You may issue credits with the amount element set to any amount up to the originally settled amount. For example, merchants can issue partial credits if they are unable to fulfill the complete order prior to settlement.
+
+	To submit a Credit request, set the transactionType element to refundTransaction in the createTransactionRequest API call.
+
+	In addition, specify the transaction that you wish to refund by passing the transaction ID in the refTransId element.
+
+
+	
+5. void -- allows the mechant to cutoff the unsettled transation. 
+
+
+	The transaction specified in the refTransId element is canceled before settlement. Once a transaction settles, it cannot be voided. Funds on a voided transaction can be held briefly by the issuing bank, depending on the issuing bank's policy, and then returned to the customer's available balance.
+
+	To submit a Void request, set the transactionType element to voidTransaction in the createTransactionRequest API call.
+
+	In addition, specify the transaction that you wish to void by passing the transaction ID in the refTransId element.
